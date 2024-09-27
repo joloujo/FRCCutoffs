@@ -1,0 +1,22 @@
+{
+    "table": {
+        "headers": [
+            "Districts",
+            "Cutoff"
+        ],
+        "rows": [
+            [
+                "PNW",
+                "54"
+            ],
+            [
+                "FIM",
+                "61"
+            ],
+            [
+                "CAL",
+                "0"
+            ]
+        ]
+    }
+}

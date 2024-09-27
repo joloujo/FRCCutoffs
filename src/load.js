@@ -27,7 +27,7 @@ function populateTable(json) {
         table.appendChild(row_element)
 
         for (value of row) {
-            let cell = document.createElement("th")
+            let cell = document.createElement("td")
             cell.innerText = value
             row_element.appendChild(cell)
         }
