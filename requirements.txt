@@ -14,12 +14,16 @@ idna==3.7
     # via requests
 msgpack==1.0.8
     # via cachecontrol
+numpy==2.1.1
+    # via scipy
 python-dotenv==1.0.1
     # via -r requirements.in
 requests==2.32.2
     # via
     #   cachecontrol
     #   statbotics
+scipy==1.14.1
+    # via -r requirements.in
 statbotics==2.0.3
     # via -r requirements.in
 urllib3==2.2.1
