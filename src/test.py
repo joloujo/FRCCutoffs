@@ -1,10 +1,17 @@
 import requests
+import os
+import base64
+from dotenv import load_dotenv
+import json
 
-url = "https://frc-api.firstinspires.org/v3.0/"
+load_dotenv()
 
-payload={}
-headers = {}
+url = "https://frc-api.firstinspires.org/v3.0/2024"
+token = f'{os.environ["FRC-API-Username"]}:{os.environ["FRC-API-Auth-Key"]}'
+credentials = base64.b64encode(bytes(token, 'utf-8')).decode("utf-8")
+headers = {'Authorization': f'Basic {credentials}'}
 
-response = requests.request("GET", url, headers=headers, data=payload)
+response = requests.request("GET", url, headers=headers)
 
-print(response.text)
+print(response)
+print(json.loads(response.text))

@@ -1,11 +1,10 @@
 from typing import Any, Dict, List
-from statbotics.main import Statbotics
+from statbotics.main import Statbotics # type: ignore 
 from TBA_API import TBA_API_Interface
-from pprint import pp
-from utils import cheesy_schedule
 import random
-from scipy.special import expit
+from scipy.special import expit # type: ignore 
 from interfaces import Team, EventInfo
+from Cheesy_API import Cheesy_API
 
 sb = Statbotics()
 TBA_API = TBA_API_Interface()
@@ -18,13 +17,12 @@ def get_event_info(event: str, year: int) -> EventInfo:
         Team(team=team['team'], total_epa=team['epa_end'], rp1_epa=team['rp_1_epa_end'], rp2_epa=team['rp_2_epa_end'])
         for team in sb_teams]
 
-    return EventInfo(teams, cheesy_schedule(len(teams), 12))
+    return EventInfo(teams, Cheesy_API.shuffled(len(teams), 12))
 
 def event_simulation(eventInfo: EventInfo, score_sd: float) -> dict[int, int]:
-    shuffled_team_numbers = list(eventInfo.teams.keys())
-    random.shuffle(shuffled_team_numbers)
+    team_numbers = list(eventInfo.teams.keys())
 
-    rps: list[int] = [0] * len(shuffled_team_numbers)
+    rps: list[int] = [0] * len(team_numbers)
 
     schedule: list[list[int]] = eventInfo.schedule
 
@@ -33,8 +31,8 @@ def event_simulation(eventInfo: EventInfo, score_sd: float) -> dict[int, int]:
         red_team_indexes: list[int] = match[:3]
         blue_team_indexes: list[int] = match[3:]
 
-        red_teams: list[Team] = [eventInfo.teams[shuffled_team_numbers[team_index]] for team_index in red_team_indexes]
-        blue_teams: list[Team] = [eventInfo.teams[shuffled_team_numbers[team_index]] for team_index in blue_team_indexes]
+        red_teams: list[Team] = [eventInfo.teams[team_numbers[team_index]] for team_index in red_team_indexes]
+        blue_teams: list[Team] = [eventInfo.teams[team_numbers[team_index]] for team_index in blue_team_indexes]
 
         # Find the total EPA of each team to calculate the win percentage
         red_epa: float = sum([team.total_epa for team in red_teams])
@@ -63,4 +61,4 @@ def event_simulation(eventInfo: EventInfo, score_sd: float) -> dict[int, int]:
         for team_index in blue_team_indexes:
             rps[team_index] += blue_rps 
 
-    return {pair[0]: pair[1] for pair in zip(shuffled_team_numbers, rps)}
+    return {pair[0]: pair[1] for pair in zip(team_numbers, rps)}
