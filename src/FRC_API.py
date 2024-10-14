@@ -1,21 +1,52 @@
-import base64
 import os
-from dotenv import load_dotenv
+import base64
 import requests
+from typing import Any
 import json
-
-load_dotenv()
+from API import API
 
 class FRC_API_Interface():
     def __init__(self) -> None:
-        token = f'{os.environ["FRC-API-Username"]}:{os.environ["FRC-API-Auth-Key"]}'
+        token = f'{os.environ['FRC-API-Username']}:{os.environ['FRC-API-Auth-Key']}'
         self.credentials = base64.b64encode(bytes(token, 'utf-8')).decode("utf-8")
 
-    def request(self, endpoint: str = '', headers: dict[str, str] = {}):
+    def request(self, endpoint: str) -> Any:
 
-        url = "https://frc-api.firstinspires.org/v3.0/" + endpoint
-        headers = {'Authorization': f'Basic {self.credentials}'} | headers
+        url: str = 'https://frc-api.firstinspires.org/v3.0/' + endpoint
+        headers = {'Authorization': f'Basic {self.credentials}'}
 
-        response = requests.get(url, headers=headers, data={})
+        response: requests.Response = requests.get(url, headers=headers, data={})
 
-        return response
+        return response.json()
+    
+    def cache(self, endpoint: str, data: Any):
+        path: str = 'data/frc_api/' + endpoint + '.json'
+
+        try:
+            with open(path, 'w+') as f:
+                json.dump(f, data)
+        except:
+            return None
+    
+    def load(self, endpoint: str) -> Any | None:
+        path: str = 'data/frc_api/' + endpoint + '.json'
+
+        try:
+            with open(path, 'r') as f:
+                data = json.load(f)
+                return data
+        except:
+            return None
+
+class FRC_API(API):
+    @classmethod
+    def dir(cls, endpoint: str) -> str:
+        return './cache/FRC/' + endpoint + '.json'
+
+    @classmethod
+    def url(cls, endpoint: str) -> str:
+        return 'https://frc-api.firstinspires.org/v3.0/' + endpoint
+
+    @classmethod
+    def get(cls, endpoint: str) -> dict[Any, Any]:
+        return {}
