@@ -2,8 +2,10 @@ import os
 import base64
 import requests
 from typing import Any
-import json
 from API import API
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class FRC_API_Interface():
     def __init__(self) -> None:
@@ -18,25 +20,6 @@ class FRC_API_Interface():
         response: requests.Response = requests.get(url, headers=headers, data={})
 
         return response.json()
-    
-    def cache(self, endpoint: str, data: Any):
-        path: str = 'data/frc_api/' + endpoint + '.json'
-
-        try:
-            with open(path, 'w+') as f:
-                json.dump(f, data)
-        except:
-            return None
-    
-    def load(self, endpoint: str) -> Any | None:
-        path: str = 'data/frc_api/' + endpoint + '.json'
-
-        try:
-            with open(path, 'r') as f:
-                data = json.load(f)
-                return data
-        except:
-            return None
 
 class FRC_API(API):
     @classmethod
