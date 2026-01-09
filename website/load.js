@@ -1,5 +1,5 @@
 async function main() {
-    let url = "./src/data.json"
+    let url = "./website/data.json"
     let json = await fetch(url).then((response) => response.json())
 
     console.log(json)
